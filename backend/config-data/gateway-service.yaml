@@ -29,3 +29,7 @@ spring:
           uri: lb://pet-service
           predicates:
             - Path=/pet/**
+        - id: ms-user
+          uri: lb://ms-user
+          predicates:
+            - Path=/user/**
