@@ -37,3 +37,7 @@ spring:
           uri: lb://ms-rate
           predicates:
             - Path=/rate/**
+        - id: ms-specialrate
+          uri: lb://ms-specialrate
+          predicates:
+            - Path=/specialrate/**
