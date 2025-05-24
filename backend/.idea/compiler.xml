@@ -10,6 +10,7 @@
         <module name="eureka-service" />
         <module name="config-service" />
         <module name="book-service" />
+        <module name="ms-rate" />
         <module name="pet-service" />
         <module name="gateway-service" />
         <module name="ms-user" />
@@ -23,6 +24,7 @@
       <module name="config-service" options="-parameters" />
       <module name="eureka-service" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
+      <module name="ms-rate" options="-parameters" />
       <module name="ms-user" options="-parameters" />
       <module name="pet-service" options="-parameters" />
       <module name="student-service" options="-parameters" />

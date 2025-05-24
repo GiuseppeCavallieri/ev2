@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: ms-rate
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8081
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:default}:${DB_PORT:default}/msrate
+    username: ${DB_USER:default}
+    password: ${DB_PASS:default}
+  jpa:
+    hibernate:
+      ddl-auto: update

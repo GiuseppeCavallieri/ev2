@@ -33,3 +33,7 @@ spring:
           uri: lb://ms-user
           predicates:
             - Path=/user/**
+        - id: ms-rate
+          uri: lb://ms-rate
+          predicates:
+            - Path=/rate/**
