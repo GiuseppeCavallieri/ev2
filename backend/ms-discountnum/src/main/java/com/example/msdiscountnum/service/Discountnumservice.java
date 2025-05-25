@@ -41,4 +41,13 @@ public class Discountnumservice {
             throw new RuntimeException("Error al eliminar el descuento: " + e.getMessage());
         }
     }
+
+    public Double getDiscountByCode(String code) {
+        Discountnum discountnum = discountnumrepository.findByCode(code);
+        if (discountnum != null) {
+            return discountnum.getDiscount();
+        } else {
+            throw new RuntimeException("Descuento no encontrado para el código: " + code);
+        }
+    }
 }

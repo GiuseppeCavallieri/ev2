@@ -9,4 +9,7 @@ public interface Discountnumrepository extends JpaRepository<Discountnum, String
 
     @Query("SELECT d FROM Discountnum d WHERE :numPersons BETWEEN d.limInf AND d.limSup")
     Discountnum findByNumPersons(@Param("numPersons") int numPersons);
+
+    @Query("SELECT d FROM Discountnum d WHERE d.code = :code")
+    Discountnum findByCode(@Param("code") String code);
 }

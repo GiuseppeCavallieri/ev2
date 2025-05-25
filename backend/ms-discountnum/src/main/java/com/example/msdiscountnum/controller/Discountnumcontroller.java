@@ -54,4 +54,14 @@ public class Discountnumcontroller {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/getDiscountByCode/{code}")
+    public ResponseEntity<Double> getDiscountByCode(@PathVariable String code) {
+        try {
+            Double discountnum = discountnumservice.getDiscountByCode(code);
+            return ResponseEntity.ok(discountnum);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
