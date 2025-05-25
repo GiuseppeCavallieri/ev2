@@ -49,3 +49,7 @@ spring:
           uri: lb://ms-discountfreq
           predicates:
             - Path=/discountfreq/**
+        - id: ms-reservation
+          uri: lb://ms-reservation
+          predicates:
+            - Path=/reservation/**

@@ -20,6 +20,9 @@
         <module name="ms-discountfreq" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ms-reservations" target="11" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -30,6 +33,7 @@
       <module name="ms-discountfreq" options="-parameters" />
       <module name="ms-discountnum" options="-parameters" />
       <module name="ms-rate" options="-parameters" />
+      <module name="ms-reservations" options="-parameters" />
       <module name="ms-specialrate" options="-parameters" />
       <module name="ms-user" options="-parameters" />
       <module name="pet-service" options="-parameters" />
