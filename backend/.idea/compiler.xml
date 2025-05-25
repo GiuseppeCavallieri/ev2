@@ -13,6 +13,7 @@
         <module name="book-service" />
         <module name="ms-rate" />
         <module name="pet-service" />
+        <module name="ms-discountnum" />
         <module name="gateway-service" />
         <module name="ms-user" />
         <module name="student-service" />
@@ -25,6 +26,7 @@
       <module name="config-service" options="-parameters" />
       <module name="eureka-service" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
+      <module name="ms-discountnum" options="-parameters" />
       <module name="ms-rate" options="-parameters" />
       <module name="ms-specialrate" options="-parameters" />
       <module name="ms-user" options="-parameters" />
