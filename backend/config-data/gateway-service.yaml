@@ -45,3 +45,7 @@ spring:
           uri: lb://ms-discountnum
           predicates:
             - Path=/discountnum/**
+        - id: ms-discountfreq
+          uri: lb://ms-discountfreq
+          predicates:
+            - Path=/discountfreq/**
