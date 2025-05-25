@@ -17,6 +17,7 @@
         <module name="gateway-service" />
         <module name="ms-user" />
         <module name="student-service" />
+        <module name="ms-discountfreq" />
       </profile>
     </annotationProcessing>
   </component>
@@ -26,6 +27,7 @@
       <module name="config-service" options="-parameters" />
       <module name="eureka-service" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
+      <module name="ms-discountfreq" options="-parameters" />
       <module name="ms-discountnum" options="-parameters" />
       <module name="ms-rate" options="-parameters" />
       <module name="ms-specialrate" options="-parameters" />

@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/ms-rate/pom.xml" />
         <option value="$PROJECT_DIR$/ms-specialrate/pom.xml" />
         <option value="$PROJECT_DIR$/ms-discountnum/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-discountfreq/pom.xml" />
       </list>
     </option>
   </component>
