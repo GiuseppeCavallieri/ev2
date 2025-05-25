@@ -41,3 +41,7 @@ spring:
           uri: lb://ms-specialrate
           predicates:
             - Path=/specialrate/**
+        - id: ms-discountnum
+          uri: lb://ms-discountnum
+          predicates:
+            - Path=/discountnum/**
