@@ -77,5 +77,24 @@ public class UserController {
         }
     }
 
+    @GetMapping("/name/{id}")
+    public ResponseEntity<String> getNameById(@PathVariable Long id) {
+        try {
+            String name = userService.getNameById(id);
+            return ResponseEntity.ok(name);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/email/{id}")
+    public ResponseEntity<String> getEmailById(@PathVariable Long id) {
+        try {
+            String email = userService.getEmailById(id);
+            return ResponseEntity.ok(email);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
 

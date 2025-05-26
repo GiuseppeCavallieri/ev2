@@ -39,4 +39,13 @@ public class RateService {
             throw new RuntimeException("Tarifa no encontrada.");
         }
     }
+
+    public String getDescByCode(String code) {
+        Rates rate = rateRepository.findById(code).orElse(null);
+        if (rate != null) {
+            return rate.getDescription();
+        } else {
+            throw new RuntimeException("Tarifa no encontrada.");
+        }
+    }
 }

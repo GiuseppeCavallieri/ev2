@@ -57,4 +57,14 @@ public class RateController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/getDesc/{code}")
+    public ResponseEntity<String> getDescByCode(@PathVariable String code) {
+        try {
+            String description = rateService.getDescByCode(code);
+            return ResponseEntity.ok(description);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

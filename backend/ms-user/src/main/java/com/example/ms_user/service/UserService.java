@@ -48,4 +48,16 @@ public class UserService {
         LocalDate birthday = findBirthday(client.getId()); // Compara la fecha de cumpleaños con la fecha actual
         return birthday.getMonth() == date.getMonth() && birthday.getDayOfMonth() == date.getDayOfMonth();
     }
+
+    public String getNameById(Long id) {
+        Users user = findUserById(id);
+        return user.getName();
+    }
+
+    public String getEmailById(Long id) {
+        Users user = findUserById(id);
+        return user.getEmail();
+    }
 }
+
+

@@ -52,17 +52,6 @@ public class Reservationcontroller {
         }
     }
 
-    // controlador auxiliar para analizar el funcionamiento de funciones
-    @GetMapping("/birthday/{clientId}/{reservationDate}")
-    public ResponseEntity<Boolean> birthdayClient(
-            @PathVariable long clientId,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate reservationDate) {
-        try {
-            Boolean isBirthday = reservationservice.birthdayClient(clientId, reservationDate);
-            return ResponseEntity.ok(isBirthday);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+
 
 }
