@@ -42,4 +42,10 @@ public class UserService {
     }
 
     public LocalDate findBirthday(Long id) { return userRepository.getBirthdayById(id); }
+
+    public boolean birthdayClient(Long clientId, LocalDate date) {
+        Users client = findUserById(clientId); // Encuentra al cliente
+        LocalDate birthday = findBirthday(client.getId()); // Compara la fecha de cumpleaños con la fecha actual
+        return birthday.getMonth() == date.getMonth() && birthday.getDayOfMonth() == date.getDayOfMonth();
+    }
 }

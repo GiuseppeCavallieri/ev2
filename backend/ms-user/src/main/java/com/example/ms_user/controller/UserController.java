@@ -4,8 +4,11 @@ import com.example.ms_user.entitie.Users;
 import com.example.ms_user.service.UserService;
 import com.example.ms_user.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/user")
@@ -63,4 +66,16 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/birthday/{clientId}/{date}")
+    public ResponseEntity<Boolean> birthdayClient(@PathVariable Long clientId, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        try {
+            boolean isBirthday = userService.birthdayClient(clientId, date);
+            return ResponseEntity.ok(isBirthday);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
+
