@@ -18,6 +18,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,6 +174,18 @@ public class Reservationservice {
         document.close();
 
         return out;
+    }
+
+    // retorna una lista de horas, segun las reservas de un dia
+    public List<LocalTime> findHoursReservedByDate(LocalDate fecha) {
+        List<Reservations> reservations = reservationrepositorie.findReservationsByDate(fecha);
+        List<LocalTime> hoursReserved = new ArrayList<>();
+
+        for (Reservations reservation : reservations) {
+            hoursReserved.add(reservation.getHourChoosen());
+        }
+
+        return hoursReserved;
     }
 }
 

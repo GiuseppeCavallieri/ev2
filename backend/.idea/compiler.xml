@@ -7,15 +7,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="eureka-service" />
         <module name="ms-specialrate" />
         <module name="config-service" />
         <module name="book-service" />
-        <module name="ms-rate" />
         <module name="pet-service" />
+        <module name="ms-user" />
+        <module name="ms-rack" />
+        <module name="eureka-service" />
+        <module name="ms-rate" />
         <module name="ms-discountnum" />
         <module name="gateway-service" />
-        <module name="ms-user" />
         <module name="student-service" />
         <module name="ms-discountfreq" />
         <module name="ms-reservation" />
@@ -33,6 +34,7 @@
       <module name="gateway-service" options="-parameters" />
       <module name="ms-discountfreq" options="-parameters" />
       <module name="ms-discountnum" options="-parameters" />
+      <module name="ms-rack" options="-parameters" />
       <module name="ms-rate" options="-parameters" />
       <module name="ms-reservation" options="-parameters" />
       <module name="ms-reservations" options="-parameters" />

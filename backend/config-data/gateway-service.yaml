@@ -53,3 +53,7 @@ spring:
           uri: lb://ms-reservation
           predicates:
             - Path=/reservation/**
+        - id: ms-rack
+          uri: lb://ms-rack
+          predicates:
+            - Path=/rack/**

@@ -20,6 +20,9 @@ public interface Reservationrepositorie extends JpaRepository<Reservations, Long
             "WHERE r.dateChoosen BETWEEN :fechaInicio AND :fechaFin ")
     List<Long> findReservationIdsByDateRange(@Param("fechaInicio") LocalDate fechaInicio,
                                              @Param("fechaFin") LocalDate fechaFin);
+
+    @Query("SELECT r FROM Reservations r WHERE r.dateChoosen = :fecha")
+    List<Reservations> findReservationsByDate(@Param("fecha") LocalDate fecha);
 }
 
 

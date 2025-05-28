@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservation")
@@ -52,6 +54,13 @@ public class Reservationcontroller {
         }
     }
 
-
-
+    @GetMapping("/findHoursReserved/{date}")
+    public ResponseEntity<List<LocalTime>> findHoursReserved(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        try {
+            List<LocalTime> hours = reservationservice.findHoursReservedByDate(date);
+            return ResponseEntity.ok(hours);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
