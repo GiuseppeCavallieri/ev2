@@ -187,6 +187,57 @@ public class Reservationservice {
 
         return hoursReserved;
     }
+
+    public List<Long> findReservationIdsByRateCodeAndDateRange(LocalDate fechaInicio, LocalDate fechaFin, String rateCode) {
+        return reservationrepositorie.findReservationIdsByRateCodeAndDateRange(fechaInicio, fechaFin, rateCode);
+    }
+
+    public List<Long> findReservationIdsByDateRange(LocalDate fechaInicio, LocalDate fechaFin) {
+        return reservationrepositorie.findReservationIdsByDateRange(fechaInicio, fechaFin);
+    }
+
+    public double getTotalCostReservationById(Long reservationId) {
+        Reservations reservation = reservationrepositorie.findById(reservationId).orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+        double totalCost = 0.0;
+        List<Long> allIds = new ArrayList<>(reservation.getCompanionsId());
+        allIds.add(reservation.getClientId()); // incluye al cliente que reservó
+
+        int groupSize = reservation.getCompanionsId().size() + 1;
+        Long discountsAvailableLong = (groupSize <= 2) ? 0L : (groupSize <= 5) ? 1L : 2L;
+
+        for (Long id : allIds){
+            Long baseRate = restTemplate.getForObject("http://ms-rate/rate/getPrice/" + reservation.getRateCode(), Long.class);
+
+            // Descuento al precio base por fecha especial
+            double discount;
+            try {
+                discount = restTemplate.getForObject(
+                        "http://ms-specialrate/specialrate/discount/" + reservation.getDateChoosen(),
+                        Double.class
+                );
+            } catch (Exception e) {
+                discount = 0.0; // Valor por defecto si hay error (400, 500, timeout, etc.)
+            }
+            if (discount != 0.0) {
+                baseRate = Math.round(baseRate * discount);
+            }
+
+            // Descuento por grupo
+            double groupDiscount = restTemplate.getForObject("http://ms-discountnum/discountnum/getDiscount/" + groupSize, Double.class);
+
+            double specialDiscount = greaterDiscountOffAClient(id, reservation.getDateChoosen(), discountsAvailableLong);
+            // se verifica si se aplico descuento por cumpleañero
+            if (restTemplate.getForObject("http://ms-user/user/birthday/" + id + "/" + reservation.getDateChoosen(), Boolean.class)) {
+                discountsAvailableLong--;
+            }
+
+            double discountToApply = Math.max(groupDiscount, specialDiscount);
+            double subtotal = baseRate - (baseRate * discountToApply);
+            double totalIVA = subtotal * 1.19;
+            totalCost += totalIVA;
+        }
+        return totalCost;
+    }
 }
 
 /*

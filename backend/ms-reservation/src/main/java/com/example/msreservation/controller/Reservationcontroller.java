@@ -63,4 +63,40 @@ public class Reservationcontroller {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("/findReservationIdsByRateCodeAndDateRange/{fechaInicio}/{fechaFin}/{rateCode}")
+    public ResponseEntity<List<Long>> findReservationIdsByRateCodeAndDateRange(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @PathVariable String rateCode) {
+        try {
+            List<Long> reservationIds = reservationservice.findReservationIdsByRateCodeAndDateRange(fechaInicio, fechaFin, rateCode);
+            return ResponseEntity.ok(reservationIds);
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(null);
+        }
+    }
+
+    @GetMapping("/findReservationIdsByDateRange/{fechaInicio}/{fechaFin}")
+    public ResponseEntity<List<Long>> findReservationIdsByDateRange(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        try {
+            List<Long> reservationIds = reservationservice.findReservationIdsByDateRange(fechaInicio, fechaFin);
+            return ResponseEntity.ok(reservationIds);
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(null);
+        }
+    }
+
+    @GetMapping("/getTotalCostReservation/{reservationId}")
+    public ResponseEntity<Double> getTotalCostReservation(@PathVariable Long reservationId) {
+        try {
+            Double totalCost = reservationservice.getTotalCostReservationById(reservationId);
+            return ResponseEntity.ok(totalCost);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
