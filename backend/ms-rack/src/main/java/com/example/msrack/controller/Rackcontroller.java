@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import com.example.msrack.service.Rackservice;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/rack")
 @CrossOrigin("*")
 public class Rackcontroller {
 
@@ -27,11 +29,12 @@ public class Rackcontroller {
     }
 
     @GetMapping("/findByDate/{date}")
-    public String findByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public List<LocalTime> findByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         try {
-            return rackservice.findByDate(date).toString();
+            return rackservice.findByDate(date);
         } catch (RuntimeException e) {
-            return "Error al encontrar racks por fecha: " + e.getMessage();
+            throw new RuntimeException("Error al buscar racks por fecha: " + e.getMessage());
         }
     }
+
 }

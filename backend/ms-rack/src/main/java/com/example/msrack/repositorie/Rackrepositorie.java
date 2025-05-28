@@ -5,10 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 public interface Rackrepositorie extends JpaRepository<Rack, Long>{
 
-    // encuentra todos los racks con un date
     @Query("SELECT r.hour FROM Rack r WHERE r.date = ?1")
-    Rack findByDate(LocalDate date);
+    List<LocalTime> findByDate(LocalDate date);
+
+    @Query("SELECT r FROM Rack r WHERE r.date = ?1 AND r.hour = ?2")
+    Rack findByDateAndHour(LocalDate date, LocalTime hour);
 }
