@@ -18,7 +18,15 @@
         <option value="$PROJECT_DIR$/ms-reservations/pom.xml" />
         <option value="$PROJECT_DIR$/ms-reservation/pom.xml" />
         <option value="$PROJECT_DIR$/ms-rack/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-kart/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/book-service/pom.xml" />
+        <option value="$PROJECT_DIR$/pet-service/pom.xml" />
+        <option value="$PROJECT_DIR$/student-service/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="17" project-jdk-type="JavaSDK">

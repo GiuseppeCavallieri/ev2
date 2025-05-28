@@ -9,21 +9,22 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ms-specialrate" />
         <module name="config-service" />
-        <module name="book-service" />
-        <module name="pet-service" />
         <module name="ms-user" />
         <module name="ms-rack" />
+        <module name="ms-kart" />
         <module name="eureka-service" />
         <module name="ms-rate" />
         <module name="ms-discountnum" />
         <module name="gateway-service" />
-        <module name="student-service" />
         <module name="ms-discountfreq" />
         <module name="ms-reservation" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="book-service" target="11" />
       <module name="ms-reservations" target="11" />
+      <module name="pet-service" target="11" />
+      <module name="student-service" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -34,6 +35,7 @@
       <module name="gateway-service" options="-parameters" />
       <module name="ms-discountfreq" options="-parameters" />
       <module name="ms-discountnum" options="-parameters" />
+      <module name="ms-kart" options="-parameters" />
       <module name="ms-rack" options="-parameters" />
       <module name="ms-rate" options="-parameters" />
       <module name="ms-reservation" options="-parameters" />
