@@ -61,3 +61,7 @@ spring:
           uri: lb://ms-kart
           predicates:
             - Path=/kart/**
+        - id: ms-report
+          uri: lb://ms-report
+          predicates:
+            - Path=/report/**

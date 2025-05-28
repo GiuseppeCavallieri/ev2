@@ -238,6 +238,10 @@ public class Reservationservice {
         }
         return totalCost;
     }
+
+    public Reservations findReservationById(Long id) {
+        return reservationrepositorie.findReservationById(id);
+    }
 }
 
 /*

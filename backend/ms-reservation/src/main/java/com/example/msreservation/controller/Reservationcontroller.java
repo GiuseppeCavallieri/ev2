@@ -99,4 +99,14 @@ public class Reservationcontroller {
         }
     }
 
+    @GetMapping("/findReservationById/{id}")
+    public ResponseEntity<Reservations> findReservationById(@PathVariable Long id) {
+        try {
+            Reservations reservation = reservationservice.findReservationById(id);
+            return ResponseEntity.ok(reservation);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }

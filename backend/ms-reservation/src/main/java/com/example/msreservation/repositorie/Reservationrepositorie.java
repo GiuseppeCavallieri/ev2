@@ -23,6 +23,11 @@ public interface Reservationrepositorie extends JpaRepository<Reservations, Long
 
     @Query("SELECT r FROM Reservations r WHERE r.dateChoosen = :fecha")
     List<Reservations> findReservationsByDate(@Param("fecha") LocalDate fecha);
+
+
+    // find reservation by id
+    @Query("SELECT r FROM Reservations r WHERE r.id = :id")
+    Reservations findReservationById(@Param("id") Long id);
 }
 
 
