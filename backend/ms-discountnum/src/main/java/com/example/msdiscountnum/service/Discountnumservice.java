@@ -1,6 +1,8 @@
 package com.example.msdiscountnum.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.example.msdiscountnum.entitie.Discountnum;
 import com.example.msdiscountnum.repositorie.Discountnumrepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +51,21 @@ public class Discountnumservice {
         } else {
             throw new RuntimeException("Descuento no encontrado para el código: " + code);
         }
+    }
+
+    public String getCodeByNumPersons(int numPersons) {
+        Discountnum discountnum = discountnumrepository.findByNumPersons(numPersons);
+        if (discountnum != null) {
+            return discountnum.getCode();
+        } else {
+            throw new RuntimeException("Código no encontrado para el número de personas: " + numPersons);
+        }
+    }
+
+    public List<String> getAllCodes() {
+        List<Discountnum> discounts = discountnumrepository.findAll();
+        return discounts.stream()
+                        .map(Discountnum::getCode)
+                        .collect(Collectors.toList());
     }
 }

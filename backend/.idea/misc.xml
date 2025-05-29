@@ -19,6 +19,7 @@
         <option value="$PROJECT_DIR$/ms-reservation/pom.xml" />
         <option value="$PROJECT_DIR$/ms-rack/pom.xml" />
         <option value="$PROJECT_DIR$/ms-kart/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-report/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

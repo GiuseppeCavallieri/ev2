@@ -109,4 +109,16 @@ public class Reservationcontroller {
         }
     }
 
+    @GetMapping("/getReservationsIdsByGroupSize/{reservationsIds}/{groupSize}")
+    public ResponseEntity<List<Long>> getReservationsIdsByGroupSize(
+            @PathVariable List<Long> reservationsIds,
+            @PathVariable String groupSize) {
+        try {
+            List<Long> filteredIds = reservationservice.getReservationsIdsByGroupSize(reservationsIds, groupSize);
+            return ResponseEntity.ok(filteredIds);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }

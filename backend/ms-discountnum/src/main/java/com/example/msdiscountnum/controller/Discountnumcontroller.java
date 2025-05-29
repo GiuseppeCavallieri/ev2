@@ -64,4 +64,24 @@ public class Discountnumcontroller {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("/getCodeByNumPersons/{numPersons}")
+    public ResponseEntity<String> getCodeByNumPersons(@PathVariable int numPersons) {
+        try {
+            String code = discountnumservice.getCodeByNumPersons(numPersons);
+            return ResponseEntity.ok(code);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/getAllCodes")
+    public ResponseEntity<List<String>> getAllCodes() {
+        try {
+            List<String> codes = discountnumservice.getAllCodes();
+            return ResponseEntity.ok(codes);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

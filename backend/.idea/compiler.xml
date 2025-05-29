@@ -14,6 +14,7 @@
         <module name="ms-kart" />
         <module name="eureka-service" />
         <module name="ms-rate" />
+        <module name="ms-report" />
         <module name="ms-discountnum" />
         <module name="gateway-service" />
         <module name="ms-discountfreq" />
@@ -38,6 +39,7 @@
       <module name="ms-kart" options="-parameters" />
       <module name="ms-rack" options="-parameters" />
       <module name="ms-rate" options="-parameters" />
+      <module name="ms-report" options="-parameters" />
       <module name="ms-reservation" options="-parameters" />
       <module name="ms-reservations" options="-parameters" />
       <module name="ms-specialrate" options="-parameters" />

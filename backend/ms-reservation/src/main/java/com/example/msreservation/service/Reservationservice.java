@@ -242,6 +242,20 @@ public class Reservationservice {
     public Reservations findReservationById(Long id) {
         return reservationrepositorie.findReservationById(id);
     }
+
+    public List<Long> getReservationsIdsByGroupSize(List<Long> reservationsIds, String groupSize) {
+        List<Long> filteredIds = new ArrayList<>();
+        for (Long id : reservationsIds) {
+            Reservations reservation = reservationrepositorie.findById(id).orElse(null);
+            int groupSizeInt = reservation.getCompanionsId().size() + 1;
+            String reservationCode = restTemplate.getForObject("http://ms-discountnum/discountnum/getCodeByNumPersons/" + groupSizeInt, String.class);
+            if (reservation != null && reservationCode.equals(groupSize)) {
+                filteredIds.add(id);
+            }
+
+        }
+        return filteredIds;
+    }
 }
 
 /*
