@@ -12,7 +12,6 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin("*")
 public class UserController {
     @Autowired
     private UserService userService;

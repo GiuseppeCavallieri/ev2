@@ -10,7 +10,6 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/report/iGroup")
-@CrossOrigin("*")
 public class IncomePerGroupController {
 
     @Autowired

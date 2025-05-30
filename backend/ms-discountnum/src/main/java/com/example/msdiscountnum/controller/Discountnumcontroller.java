@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/discountnum")
-@CrossOrigin("*")
 public class Discountnumcontroller {
 
     @Autowired

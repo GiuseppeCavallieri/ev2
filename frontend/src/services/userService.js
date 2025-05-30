@@ -5,8 +5,8 @@ const userService = {
         return httpClient.post("/user/login", { name, pass });
     },
 
-    register: (name, pass, email, fechaNacimiento, superuser) => {
-        return httpClient.post("/user/register", { superuser, name, pass, email, fechaNacimiento });
+    register: (name, pass, email, birthday, superuser) => {
+        return httpClient.post("/user/register", { superuser, name, pass, email, birthday });
     },
 
     checkSuperUser: (name) => {

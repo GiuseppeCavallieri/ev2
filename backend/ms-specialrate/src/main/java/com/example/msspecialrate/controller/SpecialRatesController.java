@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/specialrate")
-@CrossOrigin("*")
 public class SpecialRatesController {
 
     @Autowired

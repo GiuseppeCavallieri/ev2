@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/rate")
-@CrossOrigin("*")
 public class RateController {
     @Autowired
     private RateService rateService;

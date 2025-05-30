@@ -10,7 +10,6 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/report/iRate")
-@CrossOrigin("*")
 public class IncomePerRateController {
 
     @Autowired

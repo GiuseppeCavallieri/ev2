@@ -16,7 +16,7 @@ const RegisterMenu = () =>{
         name: '',
         password: '',
         email: '',
-        fechaNacimiento: '', // yyyy-MM-dd
+        birthday: '', // yyyy-MM-dd
         superuser: false,
     });
 
@@ -34,7 +34,7 @@ const RegisterMenu = () =>{
     const handleSubmit = async (e) => {
         e.preventDefault(); // Evita que la página se recargue al enviar el formulario
         try {
-          const response = await userService.register(formData.name, formData.password, formData.email, formData.fechaNacimiento, formData.superuser);
+          const response = await userService.register(formData.name, formData.password, formData.email, formData.birthday, formData.superuser);
     
           // Si la respuesta es exitosa, redirige al menú
           if (response.status === 200) {
@@ -103,8 +103,8 @@ const RegisterMenu = () =>{
                             <Form.Label>Fecha de Nacimiento</Form.Label>
                             <Form.Control
                                     type="date" 
-                                    name="fechaNacimiento" 
-                                    value={formData.fechaNacimiento} 
+                                    name="birthday" 
+                                    value={formData.birthday} 
                                     onChange={handleChange} 
                                     required 
                             />
