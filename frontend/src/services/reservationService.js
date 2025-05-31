@@ -11,11 +11,11 @@ const reservationService = {
     },
 
     getIncomePerRate: (startDate, endDate) => {
-        return httpClient.get(`/reservation/getIncomePerRate/${startDate}/${endDate}`);
+        return httpClient.get(`/report/iRate/getIncomePerRateTable/${startDate}/${endDate}`);
     },
 
     getIncomePerGroup: (startDate, endDate) => {
-        return httpClient.get(`/reservation/getIncomePerGroup/${startDate}/${endDate}`);
+        return httpClient.get(`/report/iGroup/getIncomePerGroupTable/${startDate}/${endDate}`);
     },
 
     actualizeReservedHours: (date) => {
