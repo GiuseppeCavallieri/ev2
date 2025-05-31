@@ -112,6 +112,7 @@ public class Reservationservice {
         document.add(new Paragraph("Comprobante de Reserva"));
         document.add(new Paragraph("ID de la reserva: " + reservationId));
         document.add(new Paragraph("Fecha elegida: " + reservation.getDateChoosen()));
+        document.add(new Paragraph("Hora elegida: " + reservation.getHourChoosen()));
         document.add(new Paragraph("Descripcion de la tarifa: " + rateDesc));
         document.add(new Paragraph("Cantidad de personas: " + (reservation.getCompanionsId().size() + 1)));
         document.add(new Paragraph("Reservado por: " + nameClient));
