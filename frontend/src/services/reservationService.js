@@ -3,7 +3,11 @@ import httpClient from "../http-common";
 const reservationService = {
 
     makeReservation: (clientId, companionsId, rateCode, hourChoosen, dateChoosen) => {
-        return httpClient.post("/reservation/makeReservation", { clientId, companionsId, rateCode, hourChoosen, dateChoosen });
+        return httpClient.post("/reservation/save", { clientId, companionsId, rateCode, hourChoosen, dateChoosen });
+    },
+
+    findHoursReserved: (date) => {
+        return httpClient.get(`/reservation/findHoursReserved/${date}`);
     },
 
     getIncomePerRate: (startDate, endDate) => {

@@ -22,12 +22,14 @@ const Menu = () => {
   const [showReservaModal, setShowReservaModal] = useState(false);
   const [selectedHour, setSelectedHour] = useState(null); // hora seleccionada para la reserva
   const [formReservation, setFormReservation] = useState({
-    clientId: null,
+    clientId: '',
     companionsId: [],
     rateCode: '',
     hourChoosen: '',
     dateChoosen: ''
   }); // guarda los datos de la reserva
+  const [reservationErrors, setReservationErrors] = useState({}); // errores del formulario de reservas
+  const [reservedHours, setReservedHours] = useState([]); // guarda las horas reservadas para el día seleccionado
 
   // Const usada para mostrar la pestaña de admin
   const [isSuperUser, setIsSuperUser] = useState(false);
@@ -422,11 +424,22 @@ const Menu = () => {
     }
   };
 
+  const fetchReservedHours = async (date) => {
+    try {
+      const response = await reservationService.findHoursReserved(format(date, 'yyyy-MM-dd'));
+      setReservedHours(response.data);
+    } catch (error) {
+      console.error("Error al obtener las horas reservadas:", error);
+    }
+  };
+
   const handleDayClick = (date) => {
     const day = format(date, 'eeee', { locale: es });
     const capitalizedDay = day.charAt(0).toUpperCase() + day.slice(1);
 
-    console.log("Date: ", format(date, 'yyyy-MM-dd')); // Imprime el día seleccionado en la consola
+    // consigue las horas reservadas para el día seleccionado
+    fetchReservedHours(date);
+
 
     const diasValidos = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   
@@ -459,11 +472,19 @@ const Menu = () => {
 
   const handleMakeReservation = async () => {
 
+    const errors = {};
+    if (!formReservation.clientId) errors.clientId = "El ID del cliente es obligatorio.";
+    if (!formReservation.rateCode) errors.rateCode = "El código de tarifa es obligatorio.";
+    setReservationErrors(errors);
+
+    if (Object.keys(errors).length > 0) return;
+
+    formReservation.hourChoosen = selectedHour;
     formReservation.dateChoosen = selectedDate;
-    console.log("Hora seleccionada:", selectedHour);
-    console.log("Fecha seleccionada:", formReservation.dateChoosen);
-  
+
     try {
+      console.log("Realizando reserva con los siguientes datos:", formReservation);
+      console.log("Hora seleccionada:", selectedHour);
       await reservationService.makeReservation(
         formReservation.clientId,
         formReservation.companionsId,
@@ -930,21 +951,41 @@ const Menu = () => {
         </Modal.Header>
         <Modal.Body>
           <ListGroup>
-            {horas.map((hora) => (
-              <div
-              key={hora}
-              className="d-flex align-items-center justify-content-center mb-2"
-              >
-                <span className="me-3">{hora}</span>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => handleOpenReservaModal(hora)}
+            {/* en caso de que la hora este reservada, no estara disponible*/}
+            {horas.map((hora) => {
+              // Comparación segura (convertimos las horas reservadas a formato HH:MM para comparar)
+              const estaReservada = reservedHours.some(
+                reservada => reservada.slice(0, 5) === hora
+              );
+
+              return (
+                <div
+                  key={hora}
+                  className="d-flex align-items-center justify-content-center mb-2"
                 >
-                  Reservar
-                </Button>
-              </div>
-            ))}
+                  <span className="me-3">{hora}</span>
+                  
+                  {estaReservada ? (
+                    <span className="badge bg-secondary">Reservado</span>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => {
+                        setFormReservation({ clientId: '', companionsId: [], rateCode: '' });
+                        handleOpenReservaModal(hora);
+                      }}
+                    >
+                      Reservar
+                    </Button>
+                  )}
+                </div>
+              );
+            })}
+
+
+            
+            
           </ListGroup>
         </Modal.Body>
       </Modal>
@@ -1517,9 +1558,11 @@ const Menu = () => {
             <Form.Label>ID del Cliente</Form.Label>
             <Form.Control
               type="number"
-              value={formReservation.clientId || ''}
+              value={formReservation.clientId}
               onChange={(e) => setFormReservation({ ...formReservation, clientId: parseInt(e.target.value) })}
+              isInvalid={!!reservationErrors.clientId}
             />
+            <Form.Control.Feedback type="invalid">{reservationErrors.clientId}</Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -1542,9 +1585,11 @@ const Menu = () => {
             <Form.Label>Código de Tarifa</Form.Label>
             <Form.Control
               type="text"
-              value={formReservation.rateCode || ''}
+              value={formReservation.rateCode}
               onChange={(e) => setFormReservation({ ...formReservation, rateCode: e.target.value })}
+              isInvalid={!!reservationErrors.rateCode}
             />
+            <Form.Control.Feedback type="invalid">{reservationErrors.rateCode}</Form.Control.Feedback>
           </Form.Group>
 
           <Button variant="primary" onClick={handleMakeReservation}>
