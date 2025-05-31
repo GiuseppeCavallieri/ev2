@@ -7,14 +7,19 @@ const reservationService = {
     },
 
     findHoursReserved: (date) => {
-        return httpClient.get(`/reservation/findHoursReserved/${date}`);
+        return httpClient.get(`/rack/findByDate/${date}`);
     },
 
     getIncomePerRate: (startDate, endDate) => {
         return httpClient.get(`/reservation/getIncomePerRate/${startDate}/${endDate}`);
     },
+
     getIncomePerGroup: (startDate, endDate) => {
         return httpClient.get(`/reservation/getIncomePerGroup/${startDate}/${endDate}`);
+    },
+
+    actualizeReservedHours: (date) => {
+        return httpClient.get(`/rack/saveRacks/${date}`);
     }
 };
 

@@ -433,13 +433,24 @@ const Menu = () => {
     }
   };
 
-  const handleDayClick = (date) => {
+  const actualizeReservedHours = async (date) => {
+    try {
+      await reservationService.actualizeReservedHours(format(date, 'yyyy-MM-dd'));
+      console.log("Horas reservadas actualizadas para la fecha:", format(date, 'yyyy-MM-dd'));
+    } catch (error) {
+      console.error("Error al actualizar las horas reservadas:", error);
+    }
+  };
+
+  const handleDayClick = async (date) => {
     const day = format(date, 'eeee', { locale: es });
     const capitalizedDay = day.charAt(0).toUpperCase() + day.slice(1);
 
+    // envia el date al backend para que tenga sus horas reservedas actualizadas
+    await actualizeReservedHours(date);
+
     // consigue las horas reservadas para el día seleccionado
     fetchReservedHours(date);
-
 
     const diasValidos = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   
