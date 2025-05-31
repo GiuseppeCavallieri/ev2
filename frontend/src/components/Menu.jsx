@@ -34,21 +34,31 @@ const Menu = () => {
   //--- Para mostrar tarifas y descuentos en tablas
   const [rates, setRates] = useState([]); // guarda los tarifas de la base de datos
   const [discounts, setDiscounts] = useState([]); // guarda los descuentos de la base de datos
+  const [discountsFreq, setDiscountsFreq] = useState([]); // guarda los descuentos de la base de datos
   const [karts, setKarts] = useState([]); // guarda los karts de la base de datos
   //--- Para editar tarifas y descuentos
   const [showRateModal, setShowRateModal] = useState(false); // se muestra el modal para editar tarifas
   const [showDiscountModal, setShowDiscountModal] = useState(false); // se muestra el modal para editar descuentos
+  const [showDiscountFreqModal, setShowDiscountFreqModal] = useState(false); // se muestra el modal para editar descuentos frecuentes
   const [rateFormValues, setRateFormValues] = useState({ code: '', price: '', duration: '', description: '' }); // valores del formulario de tarifas
-  const [discountFormValues, setDiscountFormValues] = useState({ code: '', discount: '', description: '' }); // valores del formulario de descuentos
+  const [discountFormValues, setDiscountFormValues] = useState({ code: '', limInf: '', limSup: '', discount: '', description: '' }); // valores del formulario de descuentos
+  const [discountfreqFormValues, setDiscountFreqFormValues] = useState({ code: '', limInf: '', limSup: '', discount: '', description: '' }); // valores del formulario de descuentos frecuentes
   const [rateErrors, setRateErrors] = useState({}); // errores del formulario de tarifas
   const [discountErrors, setDiscountErrors] = useState({}); // errores del formulario de descuentos
+  const [discountfreqErrors, setDiscountFreqErrors] = useState({}); // errores del formulario de descuentos frecuentes
   //--- Para eliminar tarifas y descuentos
   const [showDeleteRateModal, setShowDeleteRateModal] = useState(false); // se muestra el modal para eliminar tarifas
   const [showDeleteDiscountModal, setShowDeleteDiscountModal] = useState(false); // se muestra el modal para eliminar descuentos
+  const [showDeleteDiscountFreqModal, setShowDeleteDiscountFreqModal] = useState(false); // se muestra el modal para eliminar descuentos frecuentes
   const [rateToDelete, setRateToDelete] = useState(null); // tarifa a eliminar
   const [discountToDelete, setDiscountToDelete] = useState(null); // descuento a eliminar
+  const [discountFreqToDelete, setDiscountFreqToDelete] = useState(null); // descuento frecuente a eliminar
+  const [kartToDelete, setKartToDelete] = useState(null); // kart a eliminar
+  const [showDeleteKartModal, setShowDeleteKartModal] = useState(false); // se muestra el modal para eliminar karts
   const [rateToDeleteError, setRateToDeleteError] = useState({}); // errores del formulario de tarifas a eliminar
   const [discountToDeleteError, setDiscountToDeleteError] = useState({}); // errores del formulario de descuentos a eliminar
+  const [discountFreqToDeleteError, setDiscountFreqToDeleteError] = useState({}); // errores del formulario de descuentos frecuentes a eliminar
+  const [kartToDeleteError, setKartToDeleteError] = useState({}); // errores del formulario de karts a eliminar
   //--- Para modificar karts
   const [showKartModal, setShowKartModal] = useState(false); // se muestra el modal para editar karts
   const [kartFormValues, setKartFormValues] = useState({ name: '', mantentionDay: '' }); // valores del formulario de karts
@@ -127,9 +137,10 @@ const Menu = () => {
         setRates(ratesRes.data);
         const discountsRes = await discountService.getAllDiscounts();
         setDiscounts(discountsRes.data);
+        const discountsFreqRes = await discountService.getAllDiscountsFreq();
+        setDiscountsFreq(discountsFreqRes.data);
         const kartsRes = await kartService.getAllKarts();
         setKarts(kartsRes.data);
-        console.log(kartsRes.data);
       } catch (error) {
         console.error("Error al traer tarifas o descuentos:", error);
       }
@@ -170,6 +181,8 @@ const Menu = () => {
     // Si el campo esta vacio, muestra un error
     const errors = {};
     if (!discountFormValues.code.trim()) errors.code = "El código es obligatorio.";
+    if (!discountFormValues.limInf) errors.limInf = "El límite inferior es obligatorio.";
+    if (!discountFormValues.limSup) errors.limSup = "El límite superior es obligatorio.";
     if (!discountFormValues.discount) errors.discount = "El descuento es obligatorio.";
     if (!discountFormValues.description.trim()) errors.description = "La descripción es obligatoria.";
     setDiscountErrors(errors);
@@ -178,12 +191,40 @@ const Menu = () => {
     try {
       await discountService.saveDiscount({
         code: discountFormValues.code,
+        limInf: parseFloat(discountFormValues.limInf),
+        limSup: parseFloat(discountFormValues.limSup),
         discount: parseFloat(discountFormValues.discount),
         description: discountFormValues.description
       });
       setShowDiscountModal(false);
     } catch (error) {
       console.error("Error al guardar descuento:", error);
+    }
+  }
+
+  const handleDiscountFreqSubmit = async () => {
+    // Si el campo esta vacio, muestra un error
+    const errors = {};
+    if (!discountfreqFormValues.code.trim()) errors.code = "El código es obligatorio.";
+    if (!discountfreqFormValues.limInf) errors.limInf = "El límite inferior es obligatorio.";
+    if (!discountfreqFormValues.limSup) errors.limSup = "El límite superior es obligatorio.";
+    if (!discountfreqFormValues.discount) errors.discount = "El descuento es obligatorio.";
+    if (!discountfreqFormValues.description.trim()) errors.description = "La descripción es obligatoria.";
+    setDiscountFreqErrors(errors);
+
+    if (Object.keys(errors).length > 0) return; // Si hay errores, no se envía el formulario
+
+    try {
+      await discountService.saveDiscountFreq({
+        code: discountfreqFormValues.code,
+        limInf: parseFloat(discountfreqFormValues.limInf),
+        limSup: parseFloat(discountfreqFormValues.limSup),
+        discount: parseFloat(discountfreqFormValues.discount),
+        description: discountfreqFormValues.description
+      });
+      setShowDiscountFreqModal(false);
+    } catch (error) {
+      console.error("Error al guardar descuento frecuente:", error);
     }
   }
 
@@ -219,6 +260,20 @@ const Menu = () => {
     }
   }
 
+  // Elimina el descuento frecuente seleccionado
+  const handleDeleteDiscountFreq = async () => {
+    const errors = {};
+    if (!discountFreqToDelete) errors.code = "El código es obligatorio.";
+    setDiscountFreqToDeleteError(errors);
+    if (Object.keys(errors).length > 0) return;
+    try {
+      await discountService.deleteDiscountFreq(discountFreqToDelete);
+      setShowDeleteDiscountFreqModal(false);
+    } catch (error) {
+      console.error("Error al eliminar descuento frecuente:", error);
+    }
+  }
+
   const handleKartSubmit = async () => {
     const errors = {};
     if (!kartFormValues.name.trim()) errors.name = "El nombre es obligatorio.";
@@ -234,6 +289,19 @@ const Menu = () => {
       setShowKartModal(false);
     } catch (error) {
       console.error("Error al guardar kart:", error);
+    }
+  }
+
+  const handleDeleteKart = async () => {
+    const errors = {};
+    if (!kartToDelete) errors.name = "El nombre es obligatorio.";
+    setKartToDeleteError(errors);
+    if (Object.keys(errors).length > 0) return;
+    try {
+      await kartService.deleteKart(kartToDelete);
+      setShowDeleteKartModal(false);
+    } catch (error) {
+      console.error("Error al eliminar kart:", error);
     }
   }
 
@@ -382,7 +450,7 @@ const Menu = () => {
 
             {/* Pestaña de administración, solo visible para superusuarios */}
             {isSuperUser && (
-              <Tab eventKey="admin" title="Panel Admin">
+              <Tab eventKey="admin" title="Tarifas, Tarifas Especiales y Karts">
                 <div className="mt-3">
 
                   {/* Primera linea de contenido de la pestaña */}
@@ -532,14 +600,28 @@ const Menu = () => {
                       </div>
 
                       {/* Botón para abrir el modal de karts */}
-                      <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button
-                          className="mt-2"
-                          onClick={() => {
-                            setKartFormValues({ name: '', mantentionDay: '' });
-                            setShowKartModal(true);
-                          }}>Guardar Karts
-                        </Button>
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <Button
+                            className="mt-2"
+                            onClick={() => {
+                              setKartFormValues({ name: '', mantentionDay: '' });
+                              setShowKartModal(true);
+                            }}>Guardar Karts
+                          </Button>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <Button
+                            className="mt-2"
+                            variant="danger"
+                            onClick={() => {
+                              setKartToDelete(kartFormValues.name);
+                              setShowDeleteKartModal(true);
+                            }}>Eliminar Karts
+                          </Button>
+                        </div>
+
+
                       </div>
                     </div>
 
@@ -560,6 +642,127 @@ const Menu = () => {
 
                 </div>
               </Tab>
+            )}
+
+            {  /* Pestaña de descuentos */}
+            {isSuperUser && (
+              <Tab eventKey="descuentos" title="Descuentos">
+                {/* Primera linea de contenido de la pestaña */}
+                  <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap',}}>
+
+                    {/* Contenido de descuentos Num */}
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <h4>Descuentos</h4>
+                      </div>
+
+                      <div style={{ maxHeight: '140px', overflowY: 'auto' }}>
+                        <Table striped bordered hover size="sm">
+                          <thead>
+                            <tr>
+                              <th>Código</th>
+                              <th>Límite Inferior</th>
+                              <th>Límite Superior</th>
+                              <th>Descuento</th>
+                              <th>Descripción</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {discounts.map((discount) => (
+                              <tr key={discount.code}>
+                                <td>{discount.code}</td>
+                                <td>{discount.limInf}</td>
+                                <td>{discount.limSup}</td>
+                                <td>{discount.discount * 100}%</td>
+                                <td>{discount.description}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <Button
+                            className="mt-2"
+                            onClick={() => {
+                              setDiscountFormValues({ code: '', limInf: '', limSup: '', discount: '', description: '' });
+                              setShowDiscountModal(true);
+                            }}> Guardar Descuentos
+                            </Button>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <Button
+                            className="mt-2"
+                            variant="danger"
+                            onClick={() => {
+                              setDiscountToDelete(discountFormValues.code);
+                              setShowDeleteDiscountModal(true);
+                            }}>Eliminar Descuentos
+                            </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Contenido de descuentos Frecuentes */}
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <h4>Descuentos Frecuentes</h4>
+                      </div>
+
+                      <div style={{ maxHeight: '140px', overflowY: 'auto' }}>
+                        <Table striped bordered hover size="sm">
+                          <thead>
+                            <tr>
+                              <th>Código</th>
+                              <th>Límite Inferior</th>
+                              <th>Límite Superior</th>
+                              <th>Descuento</th>
+                              <th>Descripción</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {discountsFreq.map((discount) => (
+                              <tr key={discount.code}>
+                                <td>{discount.code}</td>
+                                <td>{discount.limInf}</td>
+                                <td>{discount.limSup}</td>
+                                <td>{discount.discount * 100}%</td>
+                                <td>{discount.description}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <Button
+                            className="mt-2"
+                            onClick={() => {
+                              setDiscountFreqFormValues({ code: '', limInf: '', limSup: '', discount: '', description: '' });
+                              setShowDiscountFreqModal(true);
+                            }}> Guardar Descuentos Frecuentes
+                            </Button>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <Button
+                            className="mt-2"
+                            variant="danger"
+                            onClick={() => {
+                              setDiscountFreqToDelete(discountfreqFormValues.code);
+                              setShowDeleteDiscountFreqModal(true);
+                            }}>Eliminar Descuentos Frecuentes
+                            </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </Tab>
+
+
             )}
 
             {isSuperUser && (
@@ -723,6 +926,26 @@ const Menu = () => {
               <Form.Control.Feedback type="invalid">{discountErrors.code}</Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3">
+              <Form.Label>Límite Inferior</Form.Label>
+              <Form.Control
+                type="number"
+                value={discountFormValues.limInf}
+                onChange={(e) => setDiscountFormValues({ ...discountFormValues, limInf: e.target.value })}
+                isInvalid={!!discountErrors.limInf}
+              />
+              <Form.Control.Feedback type="invalid">{discountErrors.limInf}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Límite Superior</Form.Label>
+              <Form.Control
+                type="number"
+                value={discountFormValues.limSup}
+                onChange={(e) => setDiscountFormValues({ ...discountFormValues, limSup: e.target.value })}
+                isInvalid={!!discountErrors.limSup}
+              />
+              <Form.Control.Feedback type="invalid">{discountErrors.limSup}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Descuento (%)</Form.Label>
               <Form.Control
                 type="number"
@@ -783,6 +1006,75 @@ const Menu = () => {
         </Modal.Footer>
       </Modal>
 
+      {/* Modal para editar descuentos frecuentes */}
+      <Modal show={showDiscountFreqModal} onHide={() => setShowDiscountFreqModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modificar Descuento Frecuente</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Código</Form.Label>
+              <Form.Control
+                type="text"
+                value={discountfreqFormValues.code}
+                onChange={(e) => setDiscountFreqFormValues({ ...discountfreqFormValues, code: e.target.value })}
+                isInvalid={!!discountfreqErrors.code} 
+              />
+              <Form.Control.Feedback type="invalid">{discountfreqErrors.code}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Límite Inferior</Form.Label>
+              <Form.Control
+                type="number"
+                value={discountfreqFormValues.limInf}
+                onChange={(e) => setDiscountFreqFormValues({ ...discountfreqFormValues, limInf: e.target.value })}
+                isInvalid={!!discountfreqErrors.limInf}
+              />
+              <Form.Control.Feedback type="invalid">{discountfreqErrors.limInf}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Límite Superior</Form.Label>
+              <Form.Control
+                type="number"
+                value={discountfreqFormValues.limSup}
+                onChange={(e) => setDiscountFreqFormValues({ ...discountfreqFormValues, limSup: e.target.value })}
+                isInvalid={!!discountfreqErrors.limSup}
+              />
+              <Form.Control.Feedback type="invalid">{discountfreqErrors.limSup}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Descuento (%)</Form.Label>
+              <Form.Control
+                type="number"
+                value={discountfreqFormValues.discount}
+                onChange={(e) => setDiscountFreqFormValues({ ...discountfreqFormValues, discount: e.target.value })}
+                isInvalid={!!discountfreqErrors.discount}
+              />
+              <Form.Control.Feedback type="invalid">{discountfreqErrors.discount}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Descripción</Form.Label>
+              <Form.Control
+                type="text"
+                value={discountfreqFormValues.description}
+                onChange={(e) => setDiscountFreqFormValues({ ...discountfreqFormValues, description: e.target.value })}
+                isInvalid={!!discountfreqErrors.description}
+              />
+              <Form.Control.Feedback type="invalid">{discountfreqErrors.description}</Form.Control.Feedback>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDiscountFreqModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleDiscountFreqSubmit}>
+            Guardar Cambios
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {/* Modal para eliminar descuentos */}
       <Modal show={showDeleteDiscountModal} onHide={() => setShowDeleteDiscountModal(false)}>
         <Modal.Header closeButton>
@@ -807,6 +1099,35 @@ const Menu = () => {
             Cancelar
           </Button>
           <Button variant="danger" onClick={handleDeleteDiscount}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para eliminar descuentos frecuentes */}
+      <Modal show={showDeleteDiscountFreqModal} onHide={() => setShowDeleteDiscountFreqModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Eliminar Descuento Frecuente</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Código del descuento frecuente a eliminar</Form.Label>
+              <Form.Control
+                type="text"
+                value={discountFreqToDelete}
+                onChange={(e) => setDiscountFreqToDelete(e.target.value)}
+                isInvalid={!!discountFreqToDeleteError.code}
+              />
+              <Form.Control.Feedback type="invalid">{discountFreqToDeleteError.code}</Form.Control.Feedback>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteDiscountFreqModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleDeleteDiscountFreq}>
             Eliminar
           </Button>
         </Modal.Footer>
