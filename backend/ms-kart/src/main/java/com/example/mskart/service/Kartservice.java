@@ -32,4 +32,13 @@ public class Kartservice {
                 .collect(Collectors.toList());
     }
 
+    public boolean deleteKart(String id) {
+        try {
+            kartrepositorie.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar el kart: " + e.getMessage());
+        }
+    }
+
 }

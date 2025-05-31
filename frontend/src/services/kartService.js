@@ -16,6 +16,10 @@ const kartService = {
 
     getAvailableKartsByDay: (Day) => {
         return httpClient.get(`/kart/getAvailableKarts/${Day}`);
+    },
+
+    deleteKart: (kartCode) => {
+        return httpClient.delete(`/kart/deleteKart/${kartCode}`);
     }
 
 };

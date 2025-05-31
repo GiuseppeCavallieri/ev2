@@ -36,29 +36,36 @@ const Menu = () => {
   const [discounts, setDiscounts] = useState([]); // guarda los descuentos de la base de datos
   const [discountsFreq, setDiscountsFreq] = useState([]); // guarda los descuentos de la base de datos
   const [karts, setKarts] = useState([]); // guarda los karts de la base de datos
+  const [specialRates, setSpecialRates] = useState([]); // guarda las tarifas especiales de la base de datos
   //--- Para editar tarifas y descuentos
   const [showRateModal, setShowRateModal] = useState(false); // se muestra el modal para editar tarifas
   const [showDiscountModal, setShowDiscountModal] = useState(false); // se muestra el modal para editar descuentos
   const [showDiscountFreqModal, setShowDiscountFreqModal] = useState(false); // se muestra el modal para editar descuentos frecuentes
+  const [showSpecialRateModal, setShowSpecialRateModal] = useState(false); // se muestra el modal para editar tarifas especiales
   const [rateFormValues, setRateFormValues] = useState({ code: '', price: '', duration: '', description: '' }); // valores del formulario de tarifas
   const [discountFormValues, setDiscountFormValues] = useState({ code: '', limInf: '', limSup: '', discount: '', description: '' }); // valores del formulario de descuentos
   const [discountfreqFormValues, setDiscountFreqFormValues] = useState({ code: '', limInf: '', limSup: '', discount: '', description: '' }); // valores del formulario de descuentos frecuentes
+  const [specialRateFormValues, setSpecialRateFormValues] = useState({ month: '', day: '', discount: '', description: '' }); // valores del formulario de tarifas especiales
   const [rateErrors, setRateErrors] = useState({}); // errores del formulario de tarifas
   const [discountErrors, setDiscountErrors] = useState({}); // errores del formulario de descuentos
   const [discountfreqErrors, setDiscountFreqErrors] = useState({}); // errores del formulario de descuentos frecuentes
+  const [specialRateErrors, setSpecialRateErrors] = useState({}); // errores del formulario de tarifas especiales
   //--- Para eliminar tarifas y descuentos
   const [showDeleteRateModal, setShowDeleteRateModal] = useState(false); // se muestra el modal para eliminar tarifas
   const [showDeleteDiscountModal, setShowDeleteDiscountModal] = useState(false); // se muestra el modal para eliminar descuentos
   const [showDeleteDiscountFreqModal, setShowDeleteDiscountFreqModal] = useState(false); // se muestra el modal para eliminar descuentos frecuentes
+  const [showDeleteSpecialRateModal, setShowDeleteSpecialRateModal] = useState(false); // se muestra el modal para eliminar tarifas especiales
+  const [showDeleteKartModal, setShowDeleteKartModal] = useState(false); // se muestra el modal para eliminar karts
   const [rateToDelete, setRateToDelete] = useState(null); // tarifa a eliminar
   const [discountToDelete, setDiscountToDelete] = useState(null); // descuento a eliminar
   const [discountFreqToDelete, setDiscountFreqToDelete] = useState(null); // descuento frecuente a eliminar
   const [kartToDelete, setKartToDelete] = useState(null); // kart a eliminar
-  const [showDeleteKartModal, setShowDeleteKartModal] = useState(false); // se muestra el modal para eliminar karts
+  const [specialRateToDelete, setSpecialRateToDelete] = useState(null); // tarifa especial a eliminar
   const [rateToDeleteError, setRateToDeleteError] = useState({}); // errores del formulario de tarifas a eliminar
   const [discountToDeleteError, setDiscountToDeleteError] = useState({}); // errores del formulario de descuentos a eliminar
   const [discountFreqToDeleteError, setDiscountFreqToDeleteError] = useState({}); // errores del formulario de descuentos frecuentes a eliminar
   const [kartToDeleteError, setKartToDeleteError] = useState({}); // errores del formulario de karts a eliminar
+  const [specialRateToDeleteError, setSpecialRateToDeleteError] = useState({}); // errores del formulario de tarifas especiales a eliminar
   //--- Para modificar karts
   const [showKartModal, setShowKartModal] = useState(false); // se muestra el modal para editar karts
   const [kartFormValues, setKartFormValues] = useState({ name: '', mantentionDay: '' }); // valores del formulario de karts
@@ -108,16 +115,82 @@ const Menu = () => {
     addDays(startOfCurrentWeek, i) // Calcula la fecha de cada día
   );
 
-  // Carga los datos iniciales al montar el componente
+  // fetch de descuentos frecuentes
   useEffect(() => {
+    const fetchDiscountsFreq = async () => {
+      try {
+        const response = await discountService.getAllDiscountsFreq();
+        setDiscountsFreq(response.data);
+      } catch (error) {
+        console.error("Error al obtener los descuentos frecuentes:", error);
+      }
+    };
+    fetchDiscountsFreq();
+  }, []);
 
-    // Guarda la pestaña activa en el localStorage
+  // fetch de los descuentos
+  useEffect(() => {
+    const fetchDiscounts = async () => {
+      try {
+        const response = await discountService.getAllDiscounts();
+        setDiscounts(response.data);
+      } catch (error) {
+        console.error("Error al obtener los descuentos:", error);
+      }
+    };
+    fetchDiscounts();
+  }, []);
+
+  // fetch de los rates
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        const response = await rateService.getAllRates();
+        setRates(response.data);
+      } catch (error) {
+        console.error("Error al obtener las tarifas:", error);
+      }
+    };
+    fetchRates();
+  }, []);
+
+  // actualiza la pestaña activa
+  useEffect(() => {
     const savedTab = localStorage.getItem('activeTab');
     if (savedTab) {
       setActiveTab(savedTab);
     }
+  }, []);
 
-    // Verifica si el usuario es un superusuario
+  // fetch de los karts
+  useEffect(() => {
+    const fetchKarts = async () => {
+    try {
+      const response = await kartService.getAllKarts();
+      setKarts(response.data);
+      } catch (error) {
+      console.error("Error al obtener los karts:", error);
+      }
+    };
+
+    fetchKarts();
+  },[]);
+
+  // fetch de las tarifas especiales
+  useEffect(() => {
+    const fetchSpecialRates = async () => {
+      try {
+        const response = await rateService.getAllSpecialRates();
+        setSpecialRates(response.data);
+      } catch (error) {
+        console.error("Error al obtener las tarifas especiales:", error);
+      }
+    }
+    fetchSpecialRates();
+  }, []);
+
+  // checkUser
+  useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     const checkUser = async () => {
       try {
@@ -130,25 +203,8 @@ const Menu = () => {
       }
     }
 
-    // Trae las tarifas y descuentos de la base de datos
-    const fetchRatesAndDiscounts = async () => {
-      try {
-        const ratesRes = await rateService.getAllRates();
-        setRates(ratesRes.data);
-        const discountsRes = await discountService.getAllDiscounts();
-        setDiscounts(discountsRes.data);
-        const discountsFreqRes = await discountService.getAllDiscountsFreq();
-        setDiscountsFreq(discountsFreqRes.data);
-        const kartsRes = await kartService.getAllKarts();
-        setKarts(kartsRes.data);
-      } catch (error) {
-        console.error("Error al traer tarifas o descuentos:", error);
-      }
-    };
-
     checkUser();
-    fetchRatesAndDiscounts();
-  },[]);
+  }, []);
 
   // Envía los datos de la tarifa
   const handleRateSubmit = async () => {
@@ -202,6 +258,7 @@ const Menu = () => {
     }
   }
 
+  // Envía los datos del descuento frecuente
   const handleDiscountFreqSubmit = async () => {
     // Si el campo esta vacio, muestra un error
     const errors = {};
@@ -225,6 +282,43 @@ const Menu = () => {
       setShowDiscountFreqModal(false);
     } catch (error) {
       console.error("Error al guardar descuento frecuente:", error);
+    }
+  }
+
+  // Envía los datos de la tarifa especial
+  const handleSpecialRateSubmit = async () => {
+    // Si el campo esta vacio, muestra un error
+    const errors = {};
+    if (!specialRateFormValues.month) errors.month = "El mes es obligatorio.";
+    if (!specialRateFormValues.day) errors.day = "El día es obligatorio.";
+    if (!specialRateFormValues.discount) errors.discount = "El descuento es obligatorio.";
+    if (!specialRateFormValues.description.trim()) errors.description = "La descripción es obligatoria.";
+    setSpecialRateErrors(errors);
+    if (Object.keys(errors).length > 0) return; // Si hay errores, no se envía el formulario
+    try {
+      await rateService.saveSpecialRate({
+        month: parseInt(specialRateFormValues.month),
+        day: parseInt(specialRateFormValues.day),
+        discount: parseFloat(specialRateFormValues.discount),
+        description: specialRateFormValues.description
+      });
+      setShowSpecialRateModal(false);
+    } catch (error) {
+      console.error("Error al guardar tarifa especial:", error);
+    }
+  }
+
+  // Elimina la tarifa especial seleccionada
+  const handleDeleteSpecialRate = async () => {
+    const errors = {};
+    if (!specialRateToDelete) errors.id = "El ID es obligatorio.";
+    setSpecialRateToDeleteError(errors);
+    if (Object.keys(errors).length > 0) return;
+    try {
+      await rateService.deleteSpecialRate(specialRateToDelete);
+      setShowDeleteSpecialRateModal(false);
+    } catch (error) {
+      console.error("Error al eliminar tarifa especial:", error);
     }
   }
 
@@ -274,6 +368,7 @@ const Menu = () => {
     }
   }
 
+  // Envía los datos del kart
   const handleKartSubmit = async () => {
     const errors = {};
     if (!kartFormValues.name.trim()) errors.name = "El nombre es obligatorio.";
@@ -292,6 +387,7 @@ const Menu = () => {
     }
   }
 
+  // Elimina el kart seleccionado
   const handleDeleteKart = async () => {
     const errors = {};
     if (!kartToDelete) errors.name = "El nombre es obligatorio.";
@@ -516,27 +612,31 @@ const Menu = () => {
                       </div>
                     </div>
 
-                    {/* Contenido de descuentos */}
+                    {/* Contenido de tarifas especiales */}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <h4>Descuentos</h4>
+                        <h4>Tarifas Especiales</h4>
                       </div>
 
                       <div style={{ maxHeight: '140px', overflowY: 'auto' }}>
                         <Table striped bordered hover size="sm">
                           <thead>
                             <tr>
-                              <th>Código</th>
+                              <th>Id</th>
+                              <th>Mes</th>
+                              <th>Día</th>
                               <th>Descuento</th>
                               <th>Descripción</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {discounts.map((discount) => (
-                              <tr key={discount.code}>
-                                <td>{discount.code}</td>
-                                <td>{discount.discount * 100}%</td>
-                                <td>{discount.description}</td>
+                            {specialRates.map((specialRate) => (
+                              <tr key={specialRate.id}>
+                                <td>{specialRate.id}</td>
+                                <td>{monthOrder[specialRate.month - 1]}</td>
+                                <td>{specialRate.day}</td>
+                                <td>{specialRate.discount * 100}%</td>
+                                <td>{specialRate.description}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -548,9 +648,9 @@ const Menu = () => {
                           <Button
                             className="mt-2"
                             onClick={() => {
-                              setDiscountFormValues({ code: '', discount: '', description: '' });
-                              setShowDiscountModal(true);
-                            }}> Guardar Descuentos
+                              setSpecialRateFormValues({ month: '', day: '', discount: '', description: '' });
+                              setShowSpecialRateModal(true);
+                            }}> Guardar Tarifa Especial
                             </Button>
                         </div>
 
@@ -559,9 +659,9 @@ const Menu = () => {
                             className="mt-2"
                             variant="danger"
                             onClick={() => {
-                              setDiscountToDelete(discountFormValues.code);
-                              setShowDeleteDiscountModal(true);
-                            }}>Eliminar Descuentos
+                              setSpecialRateToDelete(specialRateFormValues.id);
+                              setShowDeleteSpecialRateModal(true);
+                            }}>Eliminar Tarifa Especial
                             </Button>
                         </div>
                       </div>
@@ -1171,6 +1271,124 @@ const Menu = () => {
           </Button>
         </Modal.Footer>
       </Modal> 
+
+      {/* Modal para eliminar karts */}
+      <Modal show={showDeleteKartModal} onHide={() => setShowDeleteKartModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Eliminar Kart</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Nombre del kart a eliminar</Form.Label>
+              <Form.Control
+
+                type="text"
+                value={kartToDelete}
+                onChange={(e) => setKartToDelete(e.target.value)}
+                isInvalid={!!kartToDeleteError.name}
+              />
+              <Form.Control.Feedback type="invalid">{kartToDeleteError.name}</Form.Control.Feedback>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteKartModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleDeleteKart}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para editar tarifas especiales */}
+      <Modal show={showSpecialRateModal} onHide={() => setShowSpecialRateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modificar Tarifa Especial</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Mes</Form.Label>
+              <Form.Control
+                type="number"
+                value={specialRateFormValues.month}
+                onChange={(e) => setSpecialRateFormValues({ ...specialRateFormValues, month: e.target.value })}
+                isInvalid={!!specialRateErrors.month}
+              />
+              <Form.Control.Feedback type="invalid">{specialRateErrors.month}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Día</Form.Label>
+              <Form.Control
+                type="number"
+                value={specialRateFormValues.day}
+                onChange={(e) => setSpecialRateFormValues({ ...specialRateFormValues, day: e.target.value })}
+                isInvalid={!!specialRateErrors.day}
+              />
+              <Form.Control.Feedback type="invalid">{specialRateErrors.day}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Descuento (%)</Form.Label>
+              <Form.Control
+                type="number"
+                value={specialRateFormValues.discount}
+                onChange={(e) => setSpecialRateFormValues({ ...specialRateFormValues, discount: e.target.value })}
+                isInvalid={!!specialRateErrors.discount}
+              />
+              <Form.Control.Feedback type="invalid">{specialRateErrors.discount}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Descripción</Form.Label>
+              <Form.Control
+                type="text"
+                value={specialRateFormValues.description}
+                onChange={(e) => setSpecialRateFormValues({ ...specialRateFormValues, description: e.target.value })}
+                isInvalid={!!specialRateErrors.description}
+              />
+              <Form.Control.Feedback type="invalid">{specialRateErrors.description}</Form.Control.Feedback>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSpecialRateModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleSpecialRateSubmit}>
+            Guardar Cambios
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para eliminar tarifas especiales */}
+      <Modal show={showDeleteSpecialRateModal} onHide={() => setShowDeleteSpecialRateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Eliminar Tarifa Especial</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>ID de la tarifa especial a eliminar</Form.Label>
+              <Form.Control
+                type="text"
+                value={specialRateToDelete}
+                onChange={(e) => setSpecialRateToDelete(e.target.value)}
+                isInvalid={!!specialRateToDeleteError.id}
+              />
+              <Form.Control.Feedback type="invalid">{specialRateToDeleteError.id}</Form.Control.Feedback>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteSpecialRateModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleDeleteSpecialRate}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Modal para mostrar los reportes */}
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">

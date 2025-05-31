@@ -54,4 +54,18 @@ public class Kartcontroller {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @DeleteMapping("/deleteKart/{id}")
+    public ResponseEntity<String> deleteKart(@PathVariable String id) {
+        try {
+            boolean deleted = kartService.deleteKart(id);
+            if (deleted) {
+                return ResponseEntity.ok("Kart eliminado exitosamente.");
+            } else {
+                return ResponseEntity.status(404).body("Kart no encontrado.");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
