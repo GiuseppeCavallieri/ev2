@@ -1,14 +1,4 @@
-spring:
-  application:
-    name: ms-user
-  cloud:
-    config:
-      enabled: true
-      uri: http://localhost:8081
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:default}:${DB_PORT:default}/msuser
-    username: ${DB_USER:default}
-    password: ${DB_PASS:default}
-  jpa:
-    hibernate:
-      ddl-auto: update
+spring.application.name=ms-user
+spring.config.import=configserver:http://config-server-service:8081
+spring.cloud.config.enabled=true
+spring.cloud.compatibility-verifier.enabled=false

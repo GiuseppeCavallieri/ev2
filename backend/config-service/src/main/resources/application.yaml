@@ -5,8 +5,9 @@ spring:
     config:
       server:
         git:
-          default-label: main
+          default-label: deploy
           uri: https://github.com/GiuseppeCavallieri/ev2
           search-paths: backend/config-data
+          clone-on-start: true
   application:
     name: config-service
