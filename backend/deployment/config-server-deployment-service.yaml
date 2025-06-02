@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: config-server
-          image: giuseppe6/config-service
+          image: giuseppe6/config-service:latest
           ports:
             - containerPort: 8081
 ---

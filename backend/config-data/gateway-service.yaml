@@ -40,7 +40,7 @@ spring:
         - id: ms-user
           uri: lb://ms-user
           predicates:
-            - Path=/api/v1/user/**
+            - Path=/user/**
         - id: ms-rate
           uri: lb://ms-rate
           predicates:

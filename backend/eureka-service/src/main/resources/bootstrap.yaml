@@ -1,3 +1,7 @@
-spring.application.name=eureka-service
-spring.config.import=configserver:http://config-server-service:8081
-spring.cloud.config.enabled=true
+spring:
+  application:
+    name: eureka-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://config-server-service:8081
