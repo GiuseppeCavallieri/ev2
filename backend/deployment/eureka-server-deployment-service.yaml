@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: eureka-server-deployment
+  name: eureka-service
   labels:
-    app: eureka-server-deployment
+    app: eureka-service
 spec:
   selector:
     matchLabels:
-      app: eureka-server-deployment
+      app: eureka-service
   replicas: 1
   template:
     metadata:
       labels:
-        app: eureka-server-deployment
+        app: eureka-service
     spec:
       containers:
-        - name: eureka-server
+        - name: eureka-service
           image: giuseppe6/eureka-service:latest
           ports:
             - containerPort: 8761
@@ -23,14 +23,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: eureka-server-service
+  name: eureka-service
   labels:
-    app: eureka-server-service
+    app: eureka-service
 spec:
   selector:
-    app: eureka-server-deployment
+    app: eureka-service
   ports:
-    - protocol: TCP
+    - nodePort: 30401
+      protocol: TCP
       port: 8761
       targetPort: 8761
-  type: LoadBalancer
+  type: NodePort

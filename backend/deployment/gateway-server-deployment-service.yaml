@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway-server-deployment
+  name: gateway-service
   labels:
-    app: gateway-server-deployment
+    app: gateway-service
 spec:
   selector:
     matchLabels:
-      app: gateway-server-deployment
+      app: gateway-service
   replicas: 1
   template:
     metadata:
       labels:
-        app: gateway-server-deployment
+        app: gateway-service
     spec:
       containers:
-        - name: config-server
+        - name: gateway-service
           image: giuseppe6/gateway-service:latest
           ports:
             - containerPort: 8080
@@ -23,14 +23,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway-server-service
+  name: gateway-service
   labels:
-    app: gateway-server-service
+    app: gateway-service
 spec:
   selector:
     app: gateway-server-deployment
   ports:
-    - protocol: TCP
+    - nodePort: 30402
+      protocol: TCP
       port: 8080
       targetPort: 8080
   type: LoadBalancer

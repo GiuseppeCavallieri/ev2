@@ -11,3 +11,14 @@ spring:
           clone-on-start: true
   application:
     name: config-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      git:
+        enabled: true
